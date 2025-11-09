@@ -1,0 +1,33 @@
+name: Multi-Platform Matrix Build with Artifacts
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: Matrix Build Job
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: matrix-c344517
+        run: echo "Running matrix build for OS ${{ matrix.os }}"
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for ${{ matrix.os }}" > output-${{ matrix.os }}.txt
+          echo "Generated at $(date)" >> output-${{ matrix.os }}.txt
+          cat output-${{ matrix.os }}.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-c344517-${{ matrix.os }}
+          path: output-${{ matrix.os }}.txt
